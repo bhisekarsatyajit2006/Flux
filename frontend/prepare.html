@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Preparation Guide — Pyrefly Assessment</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    .prepare-page { padding: 80px 20px; max-width: 900px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 60px; }
+    .header h1 { font-size: 2.8rem; }
+    
+    .guide-section { margin-bottom: 48px; }
+    .guide-section h2 { font-size: 1.4rem; color: var(--accent-light); margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .guide-section p { line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px; }
+    
+    .tip-card { 
+        background: rgba(255,255,255,0.03); 
+        padding: 24px; border-radius: 12px; 
+        border: 1px solid var(--border);
+        margin-bottom: 16px;
+    }
+    .tip-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--text-primary); }
+    .tip-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0; }
+    
+    .back-nav { margin-bottom: 40px; }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="prepare-page">
+    <div class="back-nav">
+        <a href="/dashboard.html" class="nav-link">← Back to Dashboard</a>
+    </div>
+
+    <header class="header fade-up">
+        <span class="badge badge-accent">Success Roadmap</span>
+        <h1 class="mt-4">How to <span class="gradient-text">Prepare</span></h1>
+        <p class="mt-4">Master your assessment with these scientifically-backed preparation strategies.</p>
+    </header>
+
+    <div class="guide-section fade-up delay-1">
+        <h2>Phase 1: Aptitude & Logic</h2>
+        <p>This round tests your fluid intelligence and problem-solving speed. Here is how to excel:</p>
+        
+        <div class="tip-card">
+            <h3>🧩 Logical Patterns</h3>
+            <p>Practice identifying shapes, rotations, and sequence changes. Focus on analogies and syllogisms.</p>
+        </div>
+        <div class="tip-card">
+            <h3>🔢 Numerical Speed</h3>
+            <p>Brush up on basic arithmetic, percentages, and data interpretation. The key is accuracy under pressure.</p>
+        </div>
+        <div class="tip-card">
+            <h3>🧘 Mental Readyness</h3>
+            <p>Ensure you are in a quiet environment.Fluid intelligence is highly sensitive to fatigue and distractions.</p>
+        </div>
+    </div>
+
+    <div class="guide-section fade-up delay-2">
+        <h2>Phase 2: Technical Coding</h2>
+        <p>We evaluate not just if your code works, but HOW it works. Focus on these areas:</p>
+        
+        <div class="tip-card">
+            <h3>✨ Clean Code Architecture</h3>
+            <p>Use descriptive variable names and follow PEP 8 standards. AI evaluation rewards maintainability.</p>
+        </div>
+        <div class="tip-card">
+            <h3>📊 Complexity Analysis</h3>
+            <p>Be ready to explain the Big O time and space complexity of your solution. Efficiency is paramount.</p>
+        </div>
+        <div class="tip-card">
+            <h3>🛠️ Edge Case Handling</h3>
+            <p>Consider empty inputs, large datasets, and invalid formats. Robustness is a key metric.</p>
+        </div>
+    </div>
+
+    <div class="guide-section fade-up delay-3">
+        <h2>Top 3 Preparation Tips</h2>
+        <ul style="color:var(--text-secondary); line-height:2;">
+            <li><strong>Mock Tests:</strong> Take at least 2 practice assessments to get used to the fullscreen and anti-cheat environment.</li>
+            <li><strong>Review AI Solutions:</strong> After every test, carefully study the AI-generated solutions to understand more efficient methods.</li>
+            <li><strong>Time Management:</strong> Don't get stuck on one question. Mark it and move on; fluid intelligence works best when you keep the momentum.</li>
+        </ul>
+    </div>
+  </div>
+
+  <script>
+    // Particles (same as dashboard)
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    for (let i = 0; i < 40; i++) {
+        particles.push({
+            x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+            vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2,
+            r: Math.random()*1.5+.5, a: Math.random()*.3+.1,
+        });
+    }
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p => {
+            p.x+=p.vx; p.y+=p.vy;
+            if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
+            if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
+            ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fillStyle=`rgba(108,99,255,${p.a})`; ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Logout handler if needed (adding top nav first)
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.onclick = () => {
+            localStorage.clear();
+            window.location.href = '/login';
+        };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Corporate Assessment — In Progress</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    body { overflow: hidden; }   /* no scrolling during test */
+
+    /* ── Full-height test shell ── */
+    #test-wrapper {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    #top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,9,20,0.8);
+      backdrop-filter: blur(16px);
+      flex-shrink: 0;
+    }
+    #top-bar .brand { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    #top-bar .brand span { color: var(--accent); }
+
+    /* Content area */
+    #test-content {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    #test-panel {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    /* Question area */
+    #question-area {
+      padding: 36px 40px;
+      margin-bottom: 20px;
+    }
+    #question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    #question-meta { display: flex; align-items: center; gap: 12px; }
+    #question-counter { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+    #question-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      min-height: 60px;
+    }
+    #options-container { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Navigation row */
+    #nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    /* Bottom progress */
+    #progress-area {
+      background: rgba(5,9,20,0.8);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      padding: 14px 32px;
+      flex-shrink: 0;
+    }
+    #progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* ── Loading overlay ── */
+    #loading-overlay {
+      flex-direction: column;
+      gap: 16px;
+    }
+    #loading-overlay h2 { font-size: 1.5rem; }
+
+    /* ── Terminated overlay ── */
+    #terminated-overlay .modal { max-width: 500px; }
+    .term-icon { font-size: 4rem; margin-bottom: 16px; }
+
+    @media(max-width:600px) {
+      #top-bar { padding: 14px 20px; }
+      #question-area { padding: 24px 20px; }
+      #question-text { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Loading Overlay ── -->
+<div id="loading-overlay" class="overlay">
+  <div class="modal glass-card">
+    <div id="loading-spinner" class="spinner" style="width:48px;height:48px;margin:0 auto 20px;border-width:4px;"></div>
+    <h2 id="loading-title">Preparing Your Test…</h2>
+    <p id="loading-msg">Generating questions and entering fullscreen.</p>
+    <div id="start-confirm" class="mt-8" style="display:none;">
+      <button id="real-start-btn" class="btn btn-primary btn-pulse" style="padding:14px 32px;">
+        🚀 I'm Ready, Start Test
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Terminated Overlay ── -->
+<div id="terminated-overlay" class="overlay hidden">
+  <div class="modal glass-card">
+    <div class="term-icon">🚫</div>
+    <h2 style="color:var(--danger)">Test Terminated</h2>
+    <p id="terminate-reason" class="mt-4">A rule was violated.</p>
+    <p class="mt-4" style="font-size:0.88rem;">
+      For academic integrity, the test cannot be resumed once terminated.
+      Your session has been invalidated.
+    </p>
+    <div class="mt-8">
+      <a href="/" class="btn btn-outline">← Go to Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main Test Shell ── -->
+<div id="test-wrapper">
+
+  <!-- Top bar -->
+  <header id="top-bar">
+    <div class="brand">Pyrefly<span>IQ</span> Assessment</div>
+
+    <!-- Timer -->
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div id="timer-label" style="text-align:right;">
+        <div id="timer-display" style="font-size:1.3rem;font-weight:700;">30:00</div>
+        <div style="font-size:0.7rem;color:var(--text-muted);">TIME LEFT</div>
+      </div>
+      <div class="timer-ring">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle class="timer-bg"   cx="40" cy="40" r="36"/>
+          <circle class="timer-fill" id="timer-fill" cx="40" cy="40" r="36"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main id="test-content">
+    <div id="test-panel">
+
+      <!-- Question card -->
+      <div id="test-container" class="glass-card question-card">
+        <div id="question-header">
+          <div id="question-meta">
+            <span id="category-badge" class="badge badge-accent">Logical Reasoning</span>
+            <span id="question-counter">
+              Question <strong id="question-num">1</strong> of <strong id="question-total">20</strong>
+            </span>
+          </div>
+        </div>
+
+        <p id="question-text">Loading question…</p>
+
+        <div id="options-container"></div>
+
+        <!-- Nav -->
+        <div id="nav-row" class="mt-8">
+          <button id="btn-prev" class="btn btn-outline">← Previous</button>
+          <div style="display:flex;gap:12px;">
+            <button id="btn-next"   class="btn btn-primary">Next →</button>
+            <button id="btn-submit" class="btn btn-primary" style="display:none; background:linear-gradient(135deg,#00e5a0,#00b8d4);">
+              ✅ Submit Test
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom progress -->
+  <footer id="progress-area">
+    <div id="progress-info">
+      <span>Progress</span>
+      <span id="answered-count">0 / 20 answered</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:0%;"></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Progress answered count updater
+  const _origShow = window.showQuestion;
+  document.addEventListener('DOMContentLoaded', () => {
+    // Patch after test.js loads
+    const countEl = document.getElementById('answered-count');
+    const totalEl = document.getElementById('question-total');
+    setInterval(() => {
+      if (typeof ANSWERS !== 'undefined' && typeof QUESTIONS !== 'undefined') {
+        countEl.textContent = `${Object.keys(ANSWERS).length} / ${QUESTIONS.length} answered`;
+      }
+    }, 500);
+  });
+</script>
+<script src="/static/js/anticheat.js"></script>
+<script src="/static/js/test.js"></script>
+</body>
+</html>

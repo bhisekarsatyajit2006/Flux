@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Pyrefly Assessment</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    .dashboard-page { padding: 80px 20px; max-width: 1100px; margin: 0 auto; }
+    .welcome-section { margin-bottom: 48px; }
+    .welcome-section h1 { font-size: 2.4rem; margin-bottom: 10px; }
+    .welcome-section p { color: var(--text-muted); font-size: 1.1rem; }
+    
+    .rounds-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+    .round-card {
+      padding: 40px;
+      text-align: left;
+      transition: transform 0.2s;
+    }
+    .round-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+    .round-badge { margin-bottom: 20px; }
+    .round-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+    .round-card p { color: var(--text-secondary); margin-bottom: 32px; line-height: 1.6; }
+    
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+    .stat-box { padding: 24px; text-align: center; }
+    .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--accent-light); }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+    
+    @media(max-width:768px) { .rounds-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <nav class="top-nav" style="position:fixed; top:0; left:0; right:0; padding: 20px 40px; display:flex; justify-content: space-between; align-items:center; z-index:1000; background:rgba(5,9,20,0.4); backdrop-filter:blur(10px); border-bottom:1px solid var(--border);">
+    <div class="brand">Pyrefly<span>IQ</span></div>
+    <div style="display:flex; gap:20px; align-items:center;">
+      <a href="/prepare" class="nav-link" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Preparation Guide</a>
+      <button id="logout-btn" class="btn btn-outline" style="padding:8px 20px; font-size:0.85rem;">Logout</button>
+    </div>
+  </nav>
+
+  <section class="dashboard-page" style="margin-top:40px;">
+    <div class="welcome-section fade-up">
+      <h1 id="welcome-msg">Welcome, Candidate</h1>
+      <p>Elevate your professional profile with our AI-driven assessments.</p>
+    </div>
+
+    <div class="rounds-grid fade-up delay-1">
+      <div class="glass-card round-card">
+        <span class="badge badge-accent round-badge">Round 1</span>
+        <h3>Aptitude & Logic</h3>
+        <p>A 20-question challenge covering logical reasoning, spatial awareness, and numerical patterns.</p>
+        <a href="/test" class="btn btn-primary" style="width:100%;">Start Aptitude Round</a>
+      </div>
+
+      <div class="glass-card round-card">
+        <span class="badge badge-success round-badge">Round 2</span>
+        <h3>Technical Coding</h3>
+        <p>A hands-on coding challenge to evaluate architectural thinking, clean code, and algorithmic efficiency.</p>
+        <a href="/coding.html" class="btn btn-primary" style="width:100%;">Start Coding Round</a>
+      </div>
+    </div>
+
+    <div class="fade-up delay-2">
+      <h2 style="font-size:1.2rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-secondary); margin-bottom:24px;">Your Performance Overview</h2>
+      <div class="stats-row">
+        <div class="glass-card stat-box">
+          <div class="stat-value">—</div>
+          <div class="stat-label">IQ Score</div>
+        </div>
+        <div class="glass-card stat-box">
+          <div class="stat-value">—</div>
+          <div class="stat-label">Coding Rank</div>
+        </div>
+        <div class="glass-card stat-box">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Tests Taken</div>
+        </div>
+        <div class="glass-card stat-box">
+          <div class="stat-value">N/A</div>
+          <div class="stat-label">Last Activity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Auth Check
+    const token = localStorage.getItem('token');
+    if (!token) window.location.href = '/login.html';
+
+    const user = localStorage.getItem('user') || 'Candidate';
+    const userEmail = localStorage.getItem('user_email');
+    document.getElementById('welcome-msg').textContent = `Welcome, ${user}`;
+
+    // Fetch Performance Overview
+    if (userEmail) {
+      fetch(`/api/auth/profile?email=${userEmail}`)
+        .then(res => res.json())
+        .then(data => {
+            const boxes = document.querySelectorAll('.stat-value');
+            if (boxes.length >= 4) {
+                boxes[0].textContent = data.iq_score || '—';
+                boxes[1].textContent = data.coding_rank || 'N/A';
+                boxes[2].textContent = data.tests_taken || '0';
+                boxes[3].textContent = data.last_activity || 'Never';
+            }
+        })
+        .catch(err => console.error('Error fetching profile:', err));
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.href = '/login';
+    });
+
+    // Particles
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+            vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2,
+            r: Math.random()*1.5+.5, a: Math.random()*.3+.1,
+        });
+    }
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        particles.forEach(p => {
+            p.x+=p.vx; p.y+=p.vy;
+            if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
+            if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
+            ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fillStyle=`rgba(108,99,255,${p.a})`; ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pyrefly Corporate IQ Assessment — Professional Evaluation</title>
+  <meta name="description" content="Take a professional AI-powered intelligence assessment for corporate and individual evaluation."/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <style>
+    /* Landing-specific layout */
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .hero { max-width: 680px; width: 100%; text-align: center; }
+    .brain-icon {
+      font-size: 5rem;
+      display: inline-block;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 0 30px rgba(108,99,255,0.6));
+    }
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 40px 0;
+      text-align: left;
+    }
+    .info-card {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+    }
+    .info-card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .info-card h3   { font-size: 0.95rem; margin-bottom: 4px; }
+    .info-card p    { font-size: 0.82rem; line-height: 1.5; }
+    @media(max-width:600px) { .info-cards { grid-template-columns: 1fr; } }
+
+    .rules-box {
+      background: rgba(108,99,255,0.06);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 36px;
+      text-align: left;
+    }
+    .rules-box h3 { color: var(--accent-light); margin-bottom: 12px; font-size: 1rem; }
+    .rules-box ul { list-style: none; }
+    .rules-box li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--text-secondary); padding: 5px 0; }
+    .rules-box li span:first-child { color: var(--danger); font-weight: 700; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <nav id="landing-nav" class="fade-up" style="position:fixed; top:0; left:0; right:0; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; z-index:1000; background:rgba(5,9,20,0.4); backdrop-filter:blur(10px); border-bottom:1px solid var(--border);">
+      <div class="brand">Pyrefly<span>IQ</span></div>
+      <div style="display:flex; gap:24px; align-items:center;">
+          <a href="/login" id="nav-login" class="nav-link" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem;">Sign In</a>
+          <a href="/register" id="nav-register" class="nav-link" style="color:var(--text-secondary); text-decoration:none; font-size:0.9rem; border:1px solid var(--border); padding:8px 20px; border-radius:50px;">Get Started</a>
+          <a href="/dashboard" id="nav-dashboard" class="nav-link" style="display:none; color:var(--accent-light); text-decoration:none; font-size:0.9rem; font-weight:600;">Candidate Dashboard</a>
+          <button id="nav-logout" class="btn btn-outline" style="display:none; padding:8px 20px; font-size:0.85rem;">Logout</button>
+      </div>
+  </nav>
+
+  <section class="landing">
+    <div class="hero">
+      <div class="brain-icon float-anim">🧠</div>
+
+      <div class="fade-up">
+        <span class="badge badge-accent">Enterprise-Level Evaluation</span>
+        <h1 class="mt-4">Corporate <span class="gradient-text">Intelligence Assessment</span></h1>
+        <p class="subtitle mt-4">
+          Establish a benchmark for your cognitive strengths with our 20-question 
+          enterprise assessment and receive a detailed professional analysis.
+        </p>
+      </div>
+
+      <div class="info-cards fade-up delay-1">
+        <div class="info-card">
+          <div class="info-card-icon">⏱️</div>
+          <h3>30 Minutes</h3>
+          <p>Complete the test at your own pace within the time limit.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">🧩</div>
+          <h3>20 Questions</h3>
+          <p>5 cognitive categories: logic, numerical, spatial, verbal & memory.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">✨</div>
+          <h3>AI Analysis</h3>
+          <p>Receive a personalised AI-generated breakdown of your score.</p>
+        </div>
+      </div>
+
+      <div class="rules-box fade-up delay-2">
+        <h3>⚠️ Important Rules — Read Before Starting</h3>
+        <ul>
+          <li><span>✗</span> Switching tabs or windows will <strong style="color:var(--danger)">immediately terminate</strong> your test.</li>
+          <li><span>✗</span> Exiting fullscreen mode will terminate your test.</li>
+          <li><span>✗</span> You cannot copy or paste any text during the test.</li>
+          <li><span>✗</span> Closing the browser tab cancels the test permanently.</li>
+          <li><span>✓</span> The test must be taken in one continuous session.</li>
+        </ul>
+      </div>
+
+      <div class="fade-up delay-3">
+        <button id="start-btn" class="btn btn-primary btn-pulse" style="font-size:1.15rem; padding:18px 48px;">
+          <span>🚀</span> Begin Company Assessment
+        </button>
+        <p class="mt-4" style="font-size:0.82rem; color:var(--text-muted);">
+          By starting, you agree to the test rules above.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Particle background
+    const canvas = document.getElementById('particles-canvas');
+    const ctx    = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        a: Math.random() * 0.5 + 0.1,
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(108,99,255,${p.a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Auth check
+    const token = localStorage.getItem('token');
+    if (token) {
+        document.getElementById('nav-login').style.display = 'none';
+        document.getElementById('nav-register').style.display = 'none';
+        document.getElementById('nav-dashboard').style.display = 'block';
+        document.getElementById('nav-logout').style.display = 'block';
+        
+        // Logout handler
+        document.getElementById('nav-logout').onclick = () => {
+            localStorage.clear();
+            window.location.reload();
+        };
+        
+        // Change start button to dashboard link
+        const startBtn = document.getElementById('start-btn');
+        startBtn.innerHTML = '<span>📊</span> Go to Dashboard';
+        startBtn.onclick = () => window.location.href = '/dashboard';
+    } else {
+        document.getElementById('start-btn').onclick = () => {
+          window.location.href = '/login';
+        };
+    }
+  </script>
+</body>
+</html>
