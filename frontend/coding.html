@@ -6,41 +6,64 @@
   <title>Coding — Pyrefly Assessment</title>
   <link rel="stylesheet" href="/static/css/style.css"/>
   <style>
-    /* trimmed for brevity in this commit */
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(167,107,255,0.1));
+      min-height: 100vh;
+    }
+    .coding-container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(108, 99, 255, 0.2);
+      border-top-color: #6c63ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h2 {
+      margin-top: 20px;
+      font-size: 1.3rem;
+    }
+    p {
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <script>window.userEmail = window.userEmail || localStorage.getItem('user_email') || "";</script>
-  <!-- existing content retained -->
+  
+  <div class="coding-container"></div>
 
   <div id="loading-overlay">
-      <div class="spinner"></div>
-      <h2 style="margin-top:20px;">Fetching Question…</h2>
+    <div class="spinner"></div>
+    <h2>Fetching Question…</h2>
+    <p>Loading your coding challenge</p>
   </div>
 
-  <div id="result-modal">
-      <div class="glass-card result-content">
-          <h1 class="gradient-text">Evaluation Complete</h1>
-          <div id="ai-feedback" style="margin-top:24px;"></div>
-      </div>
-  </div>
-
-  <script>
-    // Example snippet that uses user_email when submitting
-    async function submitSolution(btn, questionId, code) {
-        const res = await fetch('/api/coding/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question_id: questionId, code, email: localStorage.getItem('user_email') })
-        });
-        // rest of the logic
-    }
-
-    // Logout handler
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        localStorage.clear();
-        window.location.href = '/login';
-    });
-  </script>
+  <!-- Include the coding script -->
+  <script src="/static/js/coding.js"></script>
 </body>
 </html>
