@@ -118,9 +118,10 @@
         }
         
         const data = await res.json();
+        // Store token and user info — use the email variable (not an undefined userEmail)
         localStorage.setItem('token', data.access_token);
-        localStorage.setItem('user', userEmail.split('@')[0]);
-        localStorage.setItem('user_email', userEmail);
+        localStorage.setItem('user', email.split('@')[0]);
+        localStorage.setItem('user_email', email);
         window.location.href = '/dashboard';
 
       } catch (err) {
