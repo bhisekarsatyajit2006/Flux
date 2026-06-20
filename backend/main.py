@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from config import FRONTEND_URL
+from config import FRONTEND_URL, NVIDIA_API_KEY, GEMINI_API_KEY
 from database import connect_db, close_db
 from routes.test import router as test_router
 from routes.auth import router as auth_router
@@ -17,6 +17,19 @@ from routes.coding import router as coding_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # ── Startup Debug Logging ────────────────────────────────────────────
+    print("=" * 60)
+    print("🚀 APPLICATION STARTUP")
+    print("=" * 60)
+    print(f"✓ NVIDIA_API_KEY configured: {bool(NVIDIA_API_KEY)}")
+    if NVIDIA_API_KEY:
+        print(f"  Length: {len(NVIDIA_API_KEY)} characters")
+    print(f"✓ GEMINI_API_KEY configured: {bool(GEMINI_API_KEY)}")
+    if GEMINI_API_KEY:
+        print(f"  Length: {len(GEMINI_API_KEY)} characters")
+    print(f"✓ FRONTEND_URL: {FRONTEND_URL}")
+    print("=" * 60)
+    
     await connect_db()
     yield
     await close_db()
@@ -29,7 +42,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# ── CORS ─────────────────────────────────────────────────────────────
+# ── CORS ────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[FRONTEND_URL, "http://127.0.0.1:5500", "http://localhost:5500"],
@@ -92,9 +105,3 @@ if FRONTEND_DIR.exists():
         if file_path.exists() and file_path.is_file():
             return FileResponse(str(file_path))
         return FileResponse(str(FRONTEND_DIR / "index.html"))
-
-
-
-
-
-
