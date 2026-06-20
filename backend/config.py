@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://satyajitbhisekar9_db_user:TestPassword123@cluster0.6hhwge7.mongodb.net/myapp?retryWrites=true&w=majority&appName=Cluster0")
 MONGO_DB  = os.getenv("MONGO_DB", "iq_test")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
