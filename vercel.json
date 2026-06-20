@@ -1,22 +1,16 @@
 {
   "version": 2,
   "functions": {
-    "api/index.py": {
-      "runtime": "python3.11"
-    }
+    "api/index.py": { "runtime": "python3.11" }
   },
-  "experimentalServices": [
-    {
-      "name": "backend",
+  "experimentalServices": {
+    "backend": {
       "src": "backend",
       "buildCommand": "pip install -r backend/requirements.txt",
       "startCommand": "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
     }
-  ],
+  },
   "routes": [
-    {
-      "src": "^/(.*)",
-      "dest": "/api/index.py"
-    }
+    { "src": "^/(.*)", "dest": "/api/index.py" }
   ]
 }
