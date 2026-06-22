@@ -11,7 +11,7 @@ from database import get_db
 
 router = APIRouter(prefix="/api/coding", tags=["coding"])
 
-genai.configure(api_key=GEMINI_API_KEY)
+# Note: genai is configured lazily inside the request handler when the key is available
 
 class CodeSubmission(BaseModel):
     question_id: str
@@ -91,7 +91,7 @@ async def _evaluate_nvidia_coding(prompt):
         "Content-Type": "application/json"
     }
     payload = {
-        "model": "google/diffusiongemma-26b-a4b-it",
+        "model": "meta/llama-3.1-8b-instruct",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.5,
         "max_tokens": 1024,

@@ -62,7 +62,7 @@ async def _generate_nvidia_analysis(result: dict) -> str:
         "Content-Type": "application/json"
     }
     payload = {
-        "model": "google/diffusiongemma-26b-a4b-it",
+        "model": "meta/llama-3.1-8b-instruct",
         "messages": [{"role": "user", "content": _build_prompt(result)}],
         "temperature": 0.5,
         "max_tokens": 800,
